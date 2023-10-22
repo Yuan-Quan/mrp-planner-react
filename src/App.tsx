@@ -10,6 +10,7 @@ import { ConfigTarget } from './pages/ConfigTarget';
 import { ConfigDependencis } from './pages/ConfigDependencis';
 import { ConfigInitState } from './pages/ConfigInitState';
 import { IProduct } from './MrpData';
+import { ConfigConfrim } from './pages/ConfigInitConfirm';
 
 interface IAppContext {
   targetProducts: IProduct[]
@@ -46,6 +47,7 @@ function App() {
               <Route path="target" element={<ConfigTarget />} />
               <Route path="dependencies" element={<ConfigDependencis />} />
               <Route path="init-state" element={<ConfigInitState />} />
+              <Route path="confirm" element={<ConfigConfrim />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

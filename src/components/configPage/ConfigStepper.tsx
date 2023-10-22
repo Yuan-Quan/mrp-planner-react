@@ -7,8 +7,8 @@ import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-const steps = ['设定目标需求', '设定依赖项目', '设定库存状态'];
-const steps_route = ['target', 'dependencies', 'init-state'];
+const steps = ['设定目标需求', '设定依赖项目', '设定库存状态', '确认设置'];
+const steps_route = ['target', 'dependencies', 'init-state', 'confirm'];
 
 export default function ConfigStepper() {
     const [activeStep, setActiveStep] = React.useState(0);
