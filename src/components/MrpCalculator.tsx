@@ -66,20 +66,19 @@ export const CalculateMrpChainOfProduct = (props: any) => {
 
   const propagetOrderOnce = () => {
     for (let currentPeriod = 0; currentPeriod < periods.length; currentPeriod++) {
-      console.log("currentPeriodpre", currentPeriod)
       periods[currentPeriod].items.forEach((item) => {
         if (currentPeriod + findProductByIdx(item.idx)!.lead_time >= periods.length) {
           console.log(item.name, "order query out of range, skip")
           return; // use return instead of continue
         }
-        if (periods[currentPeriod + findProductByIdx(item.idx)!.lead_time].items.find((item) => item.idx == item.idx)!.order >= item.gross_requirement) {
-          console.log(item.name, "skip")
+        console.log("od", periods[currentPeriod + findProductByIdx(item.idx)!.lead_time].items.find((item) => item.idx == item.idx)!.order)
+        console.log("gr", item.gross_requirement)
+        if (periods[currentPeriod + findProductByIdx(item.idx)!.lead_time].items.find((to_order) => to_order.idx == item.idx)!.order >= item.gross_requirement) {
+          console.log(item.name, "Already ordered, skip")
         }
         else {
-          console.log(item.name, "not satisfied, ordering")
-          console.log("currentPeriodpost", currentPeriod)
-          console.log(periods)
-          periods[currentPeriod + findProductByIdx(item.idx)!.lead_time].items.find((item) => item.idx == item.idx)!.order = item.gross_requirement
+          console.log(item.name, "not satisfied, ordering" + item.gross_requirement + "of" + item.name + "at" + (currentPeriod + findProductByIdx(item.idx)!.lead_time))
+          periods[currentPeriod + findProductByIdx(item.idx)!.lead_time].items.find((to_order) => to_order.idx == item.idx)!.order = item.gross_requirement
         }
       })
     }
@@ -90,14 +89,14 @@ export const CalculateMrpChainOfProduct = (props: any) => {
     for (let currentPeriod = 0; currentPeriod < periods.length; currentPeriod++) {
       periods[currentPeriod].items.forEach((item) => {
         if (item.order == 0) {
-          console.log(item.name, currentPeriod, "no order skip", item.order)
+          //console.log(item.name, currentPeriod, "no order skip", item.order)
         }
         else {
           //  find dependency of this item
-          console.log(item.name, "has order, resolve dependency")
+          //console.log(item.name, "has order, resolve dependency")
           findProductByIdx(item.idx)!.dependencies.map((dep) => {
             if (periods[currentPeriod].items.find((item) => item.idx == dep.deps_idx)!.gross_requirement >= item.order * dep.ratio) {
-              console.log(findProductByIdx(dep.deps_idx)!.name, "gross already satisfied")
+              //console.log(findProductByIdx(dep.deps_idx)!.name, "gross already satisfied")
             }
             else {
               periods[currentPeriod].items.find((item) => item.idx == dep.deps_idx)!.gross_requirement = item.order * dep.ratio
@@ -111,8 +110,24 @@ export const CalculateMrpChainOfProduct = (props: any) => {
 
   const propagateInboundOnce = () => {
     for (let currentPeriod = 0; currentPeriod < periods.length; currentPeriod++) {
+      console.log("at period", currentPeriod)
+      periods[currentPeriod].items.forEach((item) => {
+        if (item.order == 0) {
+          console.log(item.name, currentPeriod, "no order skip", item.order)
+        }
+        else {
+          console.log(item.name, "has order, resolve inbound")
+          if (periods[currentPeriod - findProductByIdx(item.idx)!.lead_time].items.find((to_inbound) => to_inbound.idx == item.idx)!.inbound >= item.order) {
+            console.log(item.name, "inbound already satisfied")
+          } else {
+            console.log(item.name, "inbound not satisfied, adding inbound")
+            periods[currentPeriod - findProductByIdx(item.idx)!.lead_time].items.find((to_inbound) => to_inbound.idx == item.idx)!.inbound = item.order
+          }
 
+        }
+      })
     }
+    console.log("propagateInboundOnce complete", periods)
   }
 
   const calcuateUnsatisfiedCount = () => {
@@ -137,6 +152,10 @@ export const CalculateMrpChainOfProduct = (props: any) => {
 
   propagetOrderOnce()
   propagateGrossRequirementOnce()
-
+  propagateInboundOnce()
+  console.log("=====================================")
+  propagetOrderOnce()
+  //propagateGrossRequirementOnce()
+  //propagateInboundOnce()
   return <div></div>;
 };
