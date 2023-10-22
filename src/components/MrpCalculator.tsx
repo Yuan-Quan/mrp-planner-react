@@ -155,7 +155,11 @@ export const CalculateMrpChainOfProduct = (props: any) => {
   propagateInboundOnce()
   console.log("=====================================")
   propagetOrderOnce()
-  //propagateGrossRequirementOnce()
-  //propagateInboundOnce()
+  propagateGrossRequirementOnce()
+  propagateInboundOnce()
+  console.log("=====================================")
+  propagetOrderOnce()
+  propagateGrossRequirementOnce()
+  propagateInboundOnce()
   return <div></div>;
 };
