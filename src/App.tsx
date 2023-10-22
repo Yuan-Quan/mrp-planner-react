@@ -19,7 +19,10 @@ interface IAppContext {
 export const AppContext = React.createContext<IAppContext>(null!);
 
 function App() {
-  const [targetProducts, setTargetProducts] = React.useState<IProduct[]>([])
+  const [targetProducts, setTargetProducts] = React.useState<IProduct[]>(
+    // recall from localStorage
+    JSON.parse(localStorage.getItem("targetProducts") || "[]")
+  )
 
   return (
     <div className="App">

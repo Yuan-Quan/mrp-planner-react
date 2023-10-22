@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Box, Fab, List, Typography } from "@mui/material"
 import { useContext } from "react"
 import { AppContext } from "../App"
@@ -5,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { TargetProductItem } from "../components/configPage/TargetProductItem"
 
 export const ConfigTarget = () => {
-    const { targetProducts, setTargetProducts } = useContext(AppContext)
+    const { targetProducts, setTargetProducts } = React.useContext(AppContext)
     const handleAddTargetProduct = () => {
         setTargetProducts([...targetProducts, {
             idx: targetProducts.length,

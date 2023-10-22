@@ -41,6 +41,11 @@ export const TargetProductItem = (props: IProduct) => {
         setTargetProducts(newTargetProducts);
     }
 
+    // persist to localStorage
+    React.useEffect(() => {
+        localStorage.setItem("targetProducts", JSON.stringify(targetProducts))
+    }, [targetProducts])
+
     return (
         <ListItem disablePadding>
             <ListItemButton>
@@ -49,6 +54,7 @@ export const TargetProductItem = (props: IProduct) => {
                     id="target-stock"
                     label="目标数量*"
                     type="number"
+                    defaultValue={props.target_stock}
                     onChange={handleTargetStockChange}
                     InputLabelProps={{
                         shrink: true,
@@ -58,6 +64,7 @@ export const TargetProductItem = (props: IProduct) => {
                     id="target-periode"
                     label="目标交期*"
                     type="number"
+                    defaultValue={props.target_periode}
                     onChange={handleTargetPeriodeChange}
                     InputLabelProps={{
                         shrink: true,
