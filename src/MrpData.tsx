@@ -2,6 +2,7 @@ export interface IProduct {
     idx: number;
     name: string;
     lead_time: number;
+    inital_stock: number;
     dependencis: IDependency[];
     target_periode?: number;
     target_stock?: number;

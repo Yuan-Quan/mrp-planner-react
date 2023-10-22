@@ -13,6 +13,7 @@ export const ConfigDependencis = () => {
             name: "",
             lead_time: 0,
             dependencis: [],
+            inital_stock: 0,
         }])
     }
     console.log(targetProducts);
