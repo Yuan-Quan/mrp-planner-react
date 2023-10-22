@@ -12,7 +12,7 @@ export const ConfigTarget = () => {
             idx: targetProducts.length,
             name: "",
             lead_time: 0,
-            dependencis: [],
+            dependencies: [],
             inital_stock: 0,
         }])
     }

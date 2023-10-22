@@ -22,8 +22,8 @@ function intersection(a: readonly number[], b: readonly number[]) {
 export default function DepsTransferList(props: IProduct) {
     const { targetProducts, normalProducts, setTargetProducts, setNormalProducts } = React.useContext(AppContext)
     const [checked, setChecked] = React.useState<readonly number[]>([]);
-    const [left, setLeft] = React.useState<readonly number[]>(props.dependencis.map((deps) => deps.deps_idx));
-    const [right, setRight] = React.useState<readonly number[]>(normalProducts.map((product) => product.idx).filter((idx) => !props.dependencis.map((deps) => deps.deps_idx).includes(idx)));
+    const [left, setLeft] = React.useState<readonly number[]>(props.dependencies.map((deps) => deps.deps_idx));
+    const [right, setRight] = React.useState<readonly number[]>(normalProducts.map((product) => product.idx).filter((idx) => !props.dependencies.map((deps) => deps.deps_idx).includes(idx)));
 
     // set deps
     React.useEffect(() => {
@@ -33,8 +33,8 @@ export default function DepsTransferList(props: IProduct) {
                 if (product.idx == props.idx) {
                     left.map((left_idx) => {
                         // if its already in the deps, do nothing, only when its not in the deps, add it
-                        if (!product.dependencis.map((deps) => deps.deps_idx).includes(left_idx)) {
-                            product.dependencis.push({
+                        if (!product.dependencies.map((deps) => deps.deps_idx).includes(left_idx)) {
+                            product.dependencies.push({
                                 deps_idx: left_idx,
                                 ratio: 1
                             })
@@ -52,8 +52,8 @@ export default function DepsTransferList(props: IProduct) {
             const newNormalProducts = normalProducts.map((product) => {
                 if (product.idx == props.idx) {
                     left.map((left_idx) => {
-                        if (!product.dependencis.map((deps) => deps.deps_idx).includes(left_idx)) {
-                            product.dependencis.push({
+                        if (!product.dependencies.map((deps) => deps.deps_idx).includes(left_idx)) {
+                            product.dependencies.push({
                                 deps_idx: left_idx,
                                 ratio: 1
                             })
@@ -77,8 +77,8 @@ export default function DepsTransferList(props: IProduct) {
                 if (product.idx == props.idx) {
                     right.map((right_idx) => {
                         // if it exist in the deps, remove it
-                        if (product.dependencis.map((deps) => deps.deps_idx).includes(right_idx)) {
-                            product.dependencis = product.dependencis.filter((deps) => deps.deps_idx != right_idx)
+                        if (product.dependencies.map((deps) => deps.deps_idx).includes(right_idx)) {
+                            product.dependencies = product.dependencies.filter((deps) => deps.deps_idx != right_idx)
                         }
                     })
                     return product
@@ -94,8 +94,8 @@ export default function DepsTransferList(props: IProduct) {
                 if (product.idx == props.idx) {
                     right.map((right_idx) => {
                         // if it exist in the deps, remove it
-                        if (product.dependencis.map((deps) => deps.deps_idx).includes(right_idx)) {
-                            product.dependencis = product.dependencis.filter((deps) => deps.deps_idx != right_idx)
+                        if (product.dependencies.map((deps) => deps.deps_idx).includes(right_idx)) {
+                            product.dependencies = product.dependencies.filter((deps) => deps.deps_idx != right_idx)
                         }
                     })
                     return product
@@ -112,7 +112,7 @@ export default function DepsTransferList(props: IProduct) {
     const handleRatioChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, idx: number) => {
         const newTargetProducts = targetProducts.map((product) => {
             if (product.idx == props.idx) {
-                product.dependencis = product.dependencis.map((deps) => {
+                product.dependencies = product.dependencies.map((deps) => {
                     if (deps.deps_idx == idx) {
                         return { ...deps, ratio: parseInt(e.target.value) }
                     }
@@ -130,7 +130,7 @@ export default function DepsTransferList(props: IProduct) {
 
         const newNormalProducts = normalProducts.map((product) => {
             if (product.idx == props.idx) {
-                product.dependencis = product.dependencis.map((deps) => {
+                product.dependencies = product.dependencies.map((deps) => {
                     if (deps.deps_idx == idx) {
                         return { ...deps, ratio: parseInt(e.target.value) }
                     }
@@ -199,7 +199,7 @@ export default function DepsTransferList(props: IProduct) {
     };
 
     const getDepsRatio = (deps_idx: number) => {
-        return props.dependencis.find((deps) => deps.deps_idx == deps_idx)?.ratio;
+        return props.dependencies.find((deps) => deps.deps_idx == deps_idx)?.ratio;
     }
 
     const customList = (items: readonly number[]) => (

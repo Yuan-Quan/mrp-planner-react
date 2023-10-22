@@ -32,7 +32,7 @@ const InfoTable = () => {
             name: props.name,
             initialStock: props.inital_stock,
             leadTime: props.lead_time,
-            dependencis: props.dependencis.map((dep) => {
+            dependencis: props.dependencies.map((dep) => {
                 return findProductByIdx(dep.deps_idx)?.name + " * " + dep.ratio
             }).join(", "),
             targetPeriod: props.target_periode,

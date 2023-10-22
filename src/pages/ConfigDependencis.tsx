@@ -12,7 +12,7 @@ export const ConfigDependencis = () => {
             idx: targetProducts.length + normalProducts.length,
             name: "",
             lead_time: 0,
-            dependencis: [],
+            dependencies: [],
             inital_stock: 0,
         }])
     }

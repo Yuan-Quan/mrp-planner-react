@@ -64,43 +64,55 @@ export const CalculateMrpChainOfProduct = (props: any) => {
     return item.stock + item.inbound >= item.order;
   }
 
-  const propagateGrossRequirementOnce = () => {
-    let currentPeriod = 0
-    for (let i = 0; i < periods.length; i++) {
-      periods[currentPeriod].items.forEach((item) => {
-        if (isSatisfied(item)) {
-          console.log(item.name, "satisfied");
-        } else {
-          console.log(item.name, "not satisfied");
-          // find the dependency of the item
-          const deps = findProductByIdx(item.idx)!.dependencis
-          console.log(deps)
-          deps.forEach((dep: IDependency) => {
-            // populate the gross requirement of the dependency
-            periods[currentPeriod + findProductByIdx(dep.deps_idx)!.lead_time].items.find((item) => item.idx == dep.deps_idx)!.gross_requirement = item.gross_requirement * dep.ratio
-          })
-          console.log(periods)
-        }
-      })
-    }
-  }
-
   const propagetOrderOnce = () => {
     let currentPeriod = 0
     for (let i = 0; i < periods.length; i++) {
       periods[currentPeriod].items.forEach((item) => {
-        if (isOrderSatisfied(item)) {
-          console.log(item.name, "order satisfied");
+        if (periods[currentPeriod + findProductByIdx(item.idx)!.lead_time].items.find((item) => item.idx == item.idx)!.order >= item.gross_requirement) {
+          console.log(item.name, "skip")
         }
         else {
-          console.log(item.name, "order not satisfied");
-          // order the item
-          periods[currentPeriod + findProductByIdx(item.idx)!.lead_time].items.find((item) => item.idx == item.idx)!.order = 233
+          console.log(item.name, "not satisfied, ordering")
+          periods[currentPeriod + findProductByIdx(item.idx)!.lead_time].items.find((item) => item.idx == item.idx)!.order = item.gross_requirement
+        }
+      })
+    }
+    console.log("propagetOrderOnce complete", periods)
+  }
+
+  const propagateGrossRequirementOnce = () => {
+    for (let currentPeriod = 0; currentPeriod < periods.length; currentPeriod++) {
+      periods[currentPeriod].items.forEach((item) => {
+        if (item.order == 0) {
+          console.log(item.name, currentPeriod, "no order skip", item.order)
+        }
+        else {
+          //  find dependency of this item
+          console.log(item.name, "has order, resolve dependency")
+          findProductByIdx(item.idx)!.dependencies.map((dep) => {
+            if (periods[currentPeriod].items.find((item) => item.idx == dep.deps_idx)!.gross_requirement >= item.order * dep.ratio) {
+              console.log(findProductByIdx(dep.deps_idx)!.name, "gross already satisfied")
+            }
+            else {
+              periods[currentPeriod].items.find((item) => item.idx == dep.deps_idx)!.gross_requirement = item.order * dep.ratio
+            }
+          })
+        }
+      })
+    }
+    console.log("propagateGrossRequirementOnce complete", periods)
+  }
+
+  const calcuateUnsatisfiedCount = () => {
+    let unsatisfiedCount = 0
+    for (let i = 0; i < periods.length; i++) {
+      periods[i].items.forEach((item) => {
+        if (!isSatisfied(item)) {
+          unsatisfiedCount++
         }
       })
     }
   }
-
   // populatete the periods, 10 should be plenty
   for (let i = 0; i < 10; i++)
     periods.push(createPeriod(0));
@@ -110,8 +122,9 @@ export const CalculateMrpChainOfProduct = (props: any) => {
 
   // calculate the MRP chain
   var unsatisfiedCount = 1
-  propagateGrossRequirementOnce()
+
   propagetOrderOnce()
+  propagateGrossRequirementOnce()
 
   return <div></div>;
 };
