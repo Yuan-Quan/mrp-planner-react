@@ -139,6 +139,7 @@ export const CalculateMrpChainOfProduct = (props: any) => {
         }
       })
     }
+    return unsatisfiedCount
   }
   // populatete the periods, 10 should be plenty
   for (let i = 0; i < 10; i++)
@@ -149,17 +150,14 @@ export const CalculateMrpChainOfProduct = (props: any) => {
 
   // calculate the MRP chain
   var unsatisfiedCount = 1
+  while (unsatisfiedCount > 0) {
+    propagetOrderOnce()
+    propagateGrossRequirementOnce()
+    propagateInboundOnce()
+    unsatisfiedCount = calcuateUnsatisfiedCount()
+    console.log("=====================================")
+    console.log("unsatisfiedCount", unsatisfiedCount)
+  }
 
-  propagetOrderOnce()
-  propagateGrossRequirementOnce()
-  propagateInboundOnce()
-  console.log("=====================================")
-  propagetOrderOnce()
-  propagateGrossRequirementOnce()
-  propagateInboundOnce()
-  console.log("=====================================")
-  propagetOrderOnce()
-  propagateGrossRequirementOnce()
-  propagateInboundOnce()
   return <div></div>;
 };
