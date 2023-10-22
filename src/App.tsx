@@ -14,6 +14,8 @@ import { IProduct } from './MrpData';
 interface IAppContext {
   targetProducts: IProduct[]
   setTargetProducts: React.Dispatch<React.SetStateAction<IProduct[]>>
+  normalProducts: IProduct[]
+  setNormalProducts: React.Dispatch<React.SetStateAction<IProduct[]>>
 }
 
 export const AppContext = React.createContext<IAppContext>(null!);
@@ -23,12 +25,16 @@ function App() {
     // recall from localStorage
     JSON.parse(localStorage.getItem("targetProducts") || "[]")
   )
+  const [normalProducts, setNormalProducts] = React.useState<IProduct[]>(
+    // recall from localStorage
+    JSON.parse(localStorage.getItem("normalProducts") || "[]")
+  )
 
   return (
     <div className="App">
       <CssBaseline />
       <AppContext.Provider value={{
-        targetProducts, setTargetProducts
+        targetProducts, setTargetProducts, normalProducts, setNormalProducts
       }}>
         <BRouter>
           <Routes>
