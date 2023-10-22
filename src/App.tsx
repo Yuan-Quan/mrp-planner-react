@@ -16,6 +16,8 @@ interface IAppContext {
   setTargetProducts: React.Dispatch<React.SetStateAction<IProduct[]>>
   normalProducts: IProduct[]
   setNormalProducts: React.Dispatch<React.SetStateAction<IProduct[]>>
+  selectedProductIdx: number
+  setSelectedProductIdx: React.Dispatch<React.SetStateAction<number>>
 }
 
 export const AppContext = React.createContext<IAppContext>(null!);
@@ -29,12 +31,13 @@ function App() {
     // recall from localStorage
     JSON.parse(localStorage.getItem("normalProducts") || "[]")
   )
+  const [selectedProductIdx, setSelectedProductIdx] = React.useState<number>(-1)
 
   return (
     <div className="App">
       <CssBaseline />
       <AppContext.Provider value={{
-        targetProducts, setTargetProducts, normalProducts, setNormalProducts
+        targetProducts, setTargetProducts, normalProducts, setNormalProducts, selectedProductIdx, setSelectedProductIdx
       }}>
         <BRouter>
           <Routes>

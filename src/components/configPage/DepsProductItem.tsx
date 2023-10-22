@@ -4,10 +4,10 @@ import { IProduct } from "../../MrpData"
 import { AppContext } from "../../App"
 
 export const DepsProductItem = (props: IProduct) => {
-    const { targetProducts, setTargetProducts } = React.useContext(AppContext)
+    const { normalProducts, setNormalProducts } = React.useContext(AppContext)
 
     const handleNameChange = (e: any) => {
-        const newTargetProducts = targetProducts.map((product) => {
+        const newNormalProducts = normalProducts.map((product) => {
             if (product.idx == props.idx) {
                 return { ...product, name: e.target.value }
             }
@@ -15,11 +15,11 @@ export const DepsProductItem = (props: IProduct) => {
                 return product
             }
         });
-        setTargetProducts(newTargetProducts);
+        setNormalProducts(newNormalProducts);
     }
 
     const handleLeadTimeChange = (e: any) => {
-        const newTargetProducts = targetProducts.map((product) => {
+        const newNormalProducts = normalProducts.map((product) => {
             if (product.idx == props.idx) {
                 return { ...product, lead_time: parseInt(e.target.value) }
             }
@@ -27,13 +27,13 @@ export const DepsProductItem = (props: IProduct) => {
                 return product
             }
         });
-        setTargetProducts(newTargetProducts);
+        setNormalProducts(newNormalProducts);
     }
 
     // persist to localStorage
     React.useEffect(() => {
-        localStorage.setItem("targetProducts", JSON.stringify(targetProducts))
-    }, [targetProducts])
+        localStorage.setItem("normalProducts", JSON.stringify(normalProducts))
+    }, [normalProducts])
 
     return (
         <ListItem disablePadding>

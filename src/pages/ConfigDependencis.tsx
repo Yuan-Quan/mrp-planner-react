@@ -3,6 +3,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Box, Fab, List, Typography } from "@mui/material"
 import { AppContext } from '../App';
 import { DepsProductItem } from '../components/configPage/DepsProductItem';
+import DepsTransferList from '../components/configPage/DependencyTransferList';
 
 export const ConfigDependencis = () => {
     const { targetProducts, normalProducts, setNormalProducts } = React.useContext(AppContext)
@@ -10,7 +11,7 @@ export const ConfigDependencis = () => {
         setNormalProducts([...normalProducts, {
             idx: targetProducts.length + normalProducts.length,
             name: "",
-            lead_time: -1,
+            lead_time: 0,
             dependencis: [],
         }])
     }
@@ -27,6 +28,9 @@ export const ConfigDependencis = () => {
                 <Fab color="primary" aria-label="add" onClick={handleAddNormalProduct}>
                     <AddIcon />
                 </Fab>
+            </Box>
+            <Box>
+                <DepsTransferList />
             </Box>
 
         </Box>
