@@ -67,9 +67,6 @@ export default function DepsTransferList(props: IProduct) {
             });
             setNormalProducts(newNormalProducts);
         }
-        console.log("left changed")
-        console.log(targetProducts)
-        console.log(normalProducts)
     }, [left])
 
     // set deps
@@ -109,10 +106,55 @@ export default function DepsTransferList(props: IProduct) {
             });
             setNormalProducts(newNormalProducts);
         }
-        console.log("right changed")
-        console.log(targetProducts)
-        console.log(normalProducts)
     }, [right])
+
+    // set deps ratio
+    const handleRatioChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, idx: number) => {
+        const newTargetProducts = targetProducts.map((product) => {
+            if (product.idx == props.idx) {
+                product.dependencis = product.dependencis.map((deps) => {
+                    if (deps.deps_idx == idx) {
+                        return { ...deps, ratio: parseInt(e.target.value) }
+                    }
+                    else {
+                        return deps
+                    }
+                })
+                return product
+            }
+            else {
+                return product
+            }
+        });
+        setTargetProducts(newTargetProducts);
+
+        const newNormalProducts = normalProducts.map((product) => {
+            if (product.idx == props.idx) {
+                product.dependencis = product.dependencis.map((deps) => {
+                    if (deps.deps_idx == idx) {
+                        return { ...deps, ratio: parseInt(e.target.value) }
+                    }
+                    else {
+                        return deps
+                    }
+                })
+                return product
+            }
+            else {
+                return product
+            }
+        });
+        setNormalProducts(newNormalProducts);
+
+        console.log(targetProducts);
+        console.log(normalProducts);
+    }
+
+    // persist to localStorage
+    React.useEffect(() => {
+        localStorage.setItem("targetProducts", JSON.stringify(targetProducts))
+        localStorage.setItem("normalProducts", JSON.stringify(normalProducts))
+    }, [targetProducts, normalProducts])
 
     const findProductByIdx = (idx: number) => {
         return [...targetProducts, ...normalProducts].find((product) => product.idx == idx)
@@ -156,6 +198,10 @@ export default function DepsTransferList(props: IProduct) {
         setRight([]);
     };
 
+    const getDepsRatio = (deps_idx: number) => {
+        return props.dependencis.find((deps) => deps.deps_idx == deps_idx)?.ratio;
+    }
+
     const customList = (items: readonly number[]) => (
         <Paper sx={{ width: 400, height: 230, overflow: 'auto' }}>
             <List dense component="div" role="list">
@@ -180,7 +226,7 @@ export default function DepsTransferList(props: IProduct) {
                                 />
                             </ListItemIcon>
                             <ListItemText id={labelId} primary={findProductByIdx(value)?.name} />
-                            <TextField id="standard-basic" label="倍率*" variant="standard" defaultValue={1} />
+                            <TextField id="standard-basic" label="倍率*" variant="standard" defaultValue={getDepsRatio(value)} onChange={(e) => handleRatioChange(e, value)} />
                         </ListItem>
                     );
                 })}
