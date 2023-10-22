@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import { IProduct } from '../../MrpData';
 import { AppContext } from '../../App';
+import { TextField, Typography } from '@mui/material';
 
 function not(a: readonly number[], b: readonly number[]) {
     return a.filter((value) => b.indexOf(value) === -1);
@@ -18,11 +19,100 @@ function intersection(a: readonly number[], b: readonly number[]) {
     return a.filter((value) => b.indexOf(value) !== -1);
 }
 
-export default function DepsTransferList() {
+export default function DepsTransferList(props: IProduct) {
     const { targetProducts, normalProducts, setTargetProducts, setNormalProducts } = React.useContext(AppContext)
     const [checked, setChecked] = React.useState<readonly number[]>([]);
-    const [left, setLeft] = React.useState<readonly number[]>([]);
-    const [right, setRight] = React.useState<readonly number[]>(normalProducts.map((product) => product.idx));
+    const [left, setLeft] = React.useState<readonly number[]>(props.dependencis.map((deps) => deps.deps_idx));
+    const [right, setRight] = React.useState<readonly number[]>(normalProducts.map((product) => product.idx).filter((idx) => !props.dependencis.map((deps) => deps.deps_idx).includes(idx)));
+
+    // set deps
+    React.useEffect(() => {
+        // if curent props is a product in targetProducts
+        if (targetProducts.map((product) => product.idx).includes(props.idx)) {
+            const newTargetProducts = targetProducts.map((product) => {
+                if (product.idx == props.idx) {
+                    left.map((left_idx) => {
+                        // if its already in the deps, do nothing, only when its not in the deps, add it
+                        if (!product.dependencis.map((deps) => deps.deps_idx).includes(left_idx)) {
+                            product.dependencis.push({
+                                deps_idx: left_idx,
+                                ratio: 1
+                            })
+                        }
+                    })
+                    return product
+                }
+                else {
+                    return product
+                }
+            });
+            setTargetProducts(newTargetProducts);
+        }
+        else { // else it must be a product in normalProducts
+            const newNormalProducts = normalProducts.map((product) => {
+                if (product.idx == props.idx) {
+                    left.map((left_idx) => {
+                        if (!product.dependencis.map((deps) => deps.deps_idx).includes(left_idx)) {
+                            product.dependencis.push({
+                                deps_idx: left_idx,
+                                ratio: 1
+                            })
+                        }
+                    })
+                    return product
+                }
+                else {
+                    return product
+                }
+            });
+            setNormalProducts(newNormalProducts);
+        }
+        console.log("left changed")
+        console.log(targetProducts)
+        console.log(normalProducts)
+    }, [left])
+
+    // set deps
+    React.useEffect(() => {
+        // if curent props is a product in targetProducts
+        if (targetProducts.map((product) => product.idx).includes(props.idx)) {
+            const newTargetProducts = targetProducts.map((product) => {
+                if (product.idx == props.idx) {
+                    right.map((right_idx) => {
+                        // if it exist in the deps, remove it
+                        if (product.dependencis.map((deps) => deps.deps_idx).includes(right_idx)) {
+                            product.dependencis = product.dependencis.filter((deps) => deps.deps_idx != right_idx)
+                        }
+                    })
+                    return product
+                }
+                else {
+                    return product
+                }
+            });
+            setTargetProducts(newTargetProducts);
+        }
+        else { // else it must be a product in normalProducts
+            const newNormalProducts = normalProducts.map((product) => {
+                if (product.idx == props.idx) {
+                    right.map((right_idx) => {
+                        // if it exist in the deps, remove it
+                        if (product.dependencis.map((deps) => deps.deps_idx).includes(right_idx)) {
+                            product.dependencis = product.dependencis.filter((deps) => deps.deps_idx != right_idx)
+                        }
+                    })
+                    return product
+                }
+                else {
+                    return product
+                }
+            });
+            setNormalProducts(newNormalProducts);
+        }
+        console.log("right changed")
+        console.log(targetProducts)
+        console.log(normalProducts)
+    }, [right])
 
     const findProductByIdx = (idx: number) => {
         return [...targetProducts, ...normalProducts].find((product) => product.idx == idx)
@@ -67,7 +157,7 @@ export default function DepsTransferList() {
     };
 
     const customList = (items: readonly number[]) => (
-        <Paper sx={{ width: 200, height: 230, overflow: 'auto' }}>
+        <Paper sx={{ width: 400, height: 230, overflow: 'auto' }}>
             <List dense component="div" role="list">
                 {items.map((value: number) => {
                     const labelId = `transfer-list-item-${value}-label`;
@@ -90,6 +180,7 @@ export default function DepsTransferList() {
                                 />
                             </ListItemIcon>
                             <ListItemText id={labelId} primary={findProductByIdx(value)?.name} />
+                            <TextField id="standard-basic" label="倍率*" variant="standard" defaultValue={1} />
                         </ListItem>
                     );
                 })}
@@ -99,6 +190,7 @@ export default function DepsTransferList() {
 
     return (
         <Grid container spacing={2} justifyContent="center" alignItems="center">
+            <Typography variant="h1">{props.name}的依赖项目</Typography>
             <Grid item>{customList(left)}</Grid>
             <Grid item>
                 <Grid container direction="column" alignItems="center">

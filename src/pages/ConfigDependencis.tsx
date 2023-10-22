@@ -30,7 +30,8 @@ export const ConfigDependencis = () => {
                 </Fab>
             </Box>
             <Box>
-                <DepsTransferList />
+                {targetProducts.map((product, index) => (<DepsTransferList {...product} />))}
+                {normalProducts.map((product, index) => (<DepsTransferList {...product} />))}
             </Box>
 
         </Box>
