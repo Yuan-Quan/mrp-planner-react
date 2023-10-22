@@ -4,7 +4,7 @@ import { IProduct } from "../../MrpData"
 import { AppContext } from "../../App"
 
 export const DepsProductItem = (props: IProduct) => {
-    const { normalProducts, setNormalProducts } = React.useContext(AppContext)
+    const { normalProducts, setNormalProducts, targetProducts, setTargetProducts } = React.useContext(AppContext)
 
     const handleNameChange = (e: any) => {
         const newNormalProducts = normalProducts.map((product) => {
@@ -19,6 +19,16 @@ export const DepsProductItem = (props: IProduct) => {
     }
 
     const handleLeadTimeChange = (e: any) => {
+        const newTargetProducts = targetProducts.map((product) => {
+            if (product.idx == props.idx) {
+                return { ...product, lead_time: parseInt(e.target.value) }
+            }
+            else {
+                return product
+            }
+        });
+        setTargetProducts(newTargetProducts);
+
         const newNormalProducts = normalProducts.map((product) => {
             if (product.idx == props.idx) {
                 return { ...product, lead_time: parseInt(e.target.value) }

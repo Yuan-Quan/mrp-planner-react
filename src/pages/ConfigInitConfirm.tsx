@@ -50,7 +50,7 @@ const InfoTable = () => {
                         <TableCell align="right">提前期&nbsp;(periods)</TableCell>
                         <TableCell align="right">依赖项目&nbsp;</TableCell>
                         <TableCell align="right">目标周期&nbsp;(periods)</TableCell>
-                        <TableCell align="right">目标库存&nbsp;(periods)</TableCell>
+                        <TableCell align="right">目标库存&nbsp;</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
