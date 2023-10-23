@@ -42,7 +42,7 @@ export default function ProductMrpTable(props: IProduct) {
                         <TableCell align="right">毛需求量</TableCell>
                         <TableCell align="right">订单入库</TableCell>
                         <TableCell align="right">订单下达</TableCell>
-                        <TableCell align="right">库存</TableCell>
+                        {/* <TableCell align="right">库存</TableCell> */}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -58,7 +58,7 @@ export default function ProductMrpTable(props: IProduct) {
                             <TableCell align="right">{row.gr}</TableCell>
                             <TableCell align="right">{row.inbound}</TableCell>
                             <TableCell align="right">{row.order}</TableCell>
-                            <TableCell align="right">{row.stock}</TableCell>
+                            {/* <TableCell align="right">{row.stock}</TableCell> */}
                         </TableRow>
                     ))}
                 </TableBody>

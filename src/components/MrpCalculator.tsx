@@ -14,7 +14,7 @@ export const calculateMrpChainOfProduct = (targetProducts: IProduct[], normalPro
       idx: product.idx,
       name: product.name,
       gross_requirement: 0,
-      stock: 0,
+      stock: product.inital_stock,
       inbound: 0,
       order: 0,
       isOrderGenerated: false,
@@ -53,8 +53,18 @@ export const calculateMrpChainOfProduct = (targetProducts: IProduct[], normalPro
           console.log(item.name, "Already ordered, skip")
         }
         else {
+          if (item.gross_requirement <= item.stock + item.inbound) {
+            console.log(item.name, "stock already satisfied, skip")
+            item.isOrderGenerated = true
+            //decrement the stock for after this point
+            for (let idz = currentPeriod; idz < periods.length; idz++) {
+              periods[currentPeriod].items.find((item_to_destock) => item_to_destock.idx == item.idx)!.stock -= item.gross_requirement
+              console.log("++++++++++++++")
+            }
+            return;
+          }
           console.log(item.name, "not satisfied, ordering " + item.gross_requirement + " of " + periods[currentPeriod - findProductByIdx(item.idx)!.lead_time].items.find((to_order) => to_order.idx == item.idx)!.name + "at" + (currentPeriod + findProductByIdx(item.idx)!.lead_time))
-          periods[currentPeriod - findProductByIdx(item.idx)!.lead_time].items.find((to_order) => to_order.idx == item.idx)!.order += item.gross_requirement
+          periods[currentPeriod - findProductByIdx(item.idx)!.lead_time].items.find((to_order) => to_order.idx == item.idx)!.order += (item.gross_requirement - item.stock)
           item.isOrderGenerated = true
         }
       })
@@ -174,6 +184,7 @@ export const calculateMrpChainOfProduct = (targetProducts: IProduct[], normalPro
     console.log("=====================================")
     console.log("unsatisfiedCount", unsatisfiedCount)
   }
+  propagetOrderOnce()
   return periods.slice(10, max_target_period + 11);
 };
 
