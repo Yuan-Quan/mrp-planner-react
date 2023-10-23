@@ -12,6 +12,7 @@ import { ConfigInitState } from './pages/ConfigInitState';
 import { IPeriod, IProduct } from './MrpData';
 import { ConfigConfrim } from './pages/ConfigInitConfirm';
 import { Result } from './pages/Result';
+import { NavBar } from './components/NavBar';
 
 interface IAppContext {
   targetProducts: IProduct[]
@@ -45,6 +46,7 @@ function App() {
         targetProducts, setTargetProducts, normalProducts, setNormalProducts, selectedProductIdx, setSelectedProductIdx, mrpResult, setMrpResult
       }}>
         <BRouter>
+          <NavBar />
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/config" element={<ConfigPage />} >

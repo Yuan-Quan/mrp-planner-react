@@ -7,7 +7,7 @@ export const Main = () => {
             <Typography variant="h1">Main page place holder</Typography>
             <List>
                 <ListItem>
-                    <Link to="/config/target">开始新的计算</Link>
+                    <Link to="/config/target">开始设定参数</Link>
                 </ListItem>
                 <ListItem>
                     <Link to="/result">计算结果</Link>
