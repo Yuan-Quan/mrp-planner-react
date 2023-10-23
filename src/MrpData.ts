@@ -21,6 +21,9 @@ export interface IPeriodItem {
   stock: number;
   inbound: number;
   order: number;
+  isOrderGenerated: boolean;
+  isGRGenerated: boolean;
+  isInboundGenerated: boolean;
 }
 
 export interface IPeriod {

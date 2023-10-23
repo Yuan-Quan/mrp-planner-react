@@ -17,6 +17,9 @@ export const calculateMrpChainOfProduct = (targetProducts: IProduct[], normalPro
       stock: 0,
       inbound: 0,
       order: 0,
+      isOrderGenerated: false,
+      isGRGenerated: false,
+      isInboundGenerated: false,
     };
   };
   // create a empty period
@@ -42,16 +45,17 @@ export const calculateMrpChainOfProduct = (targetProducts: IProduct[], normalPro
   const propagetOrderOnce = () => {
     for (let currentPeriod = periods.length - 1; currentPeriod > 0; currentPeriod--) {
       periods[currentPeriod].items.forEach((item) => {
-        if (currentPeriod - findProductByIdx(item.idx)!.lead_time < 0) {
-          console.log(item.name, "order query out of range, skip")
-          return; // use return instead of continue
+        if (item.gross_requirement == 0) {
+          console.log(item.name, "no need to order, skip")
+          return;
         }
-        if (periods[currentPeriod - findProductByIdx(item.idx)!.lead_time].items.find((to_order) => to_order.idx == item.idx)!.order >= item.gross_requirement) {
+        if (item.isOrderGenerated) {
           console.log(item.name, "Already ordered, skip")
         }
         else {
-          console.log(item.name, "not satisfied, ordering" + item.gross_requirement + "of" + item.name + "at" + (currentPeriod + findProductByIdx(item.idx)!.lead_time))
-          periods[currentPeriod - findProductByIdx(item.idx)!.lead_time].items.find((to_order) => to_order.idx == item.idx)!.order = item.gross_requirement
+          console.log(item.name, "not satisfied, ordering " + item.gross_requirement + " of " + periods[currentPeriod - findProductByIdx(item.idx)!.lead_time].items.find((to_order) => to_order.idx == item.idx)!.name + "at" + (currentPeriod + findProductByIdx(item.idx)!.lead_time))
+          periods[currentPeriod - findProductByIdx(item.idx)!.lead_time].items.find((to_order) => to_order.idx == item.idx)!.order += item.gross_requirement
+          item.isOrderGenerated = true
         }
       })
     }
@@ -62,19 +66,19 @@ export const calculateMrpChainOfProduct = (targetProducts: IProduct[], normalPro
     for (let currentPeriod = periods.length - 1; currentPeriod > 0; currentPeriod--) {
       periods[currentPeriod].items.forEach((item) => {
         if (item.order == 0) {
-          //console.log(item.name, currentPeriod, "no order skip", item.order)
+          console.log(item.name, currentPeriod, "no order skip")
         }
         else {
-          //  find dependency of this item
-          //console.log(item.name, "has order, resolve dependency")
-          findProductByIdx(item.idx)!.dependencies.map((dep) => {
-            if (periods[currentPeriod].items.find((item) => item.idx == dep.deps_idx)!.gross_requirement >= item.order * dep.ratio) {
-              //console.log(findProductByIdx(dep.deps_idx)!.name, "gross already satisfied")
-            }
-            else {
-              periods[currentPeriod].items.find((item) => item.idx == dep.deps_idx)!.gross_requirement = item.order * dep.ratio
-            }
-          })
+          if (item.isGRGenerated) {
+            console.log(item.name, "gross already generated")
+          }
+          else {
+            console.log(item.name, "has order, resolve dependency")
+            findProductByIdx(item.idx)!.dependencies.map((dep) => {
+              periods[currentPeriod].items.find((item) => item.idx == dep.deps_idx)!.gross_requirement += item.order * dep.ratio
+            })
+            item.isGRGenerated = true;
+          }
         }
       })
     }
@@ -90,11 +94,12 @@ export const calculateMrpChainOfProduct = (targetProducts: IProduct[], normalPro
         }
         else {
           console.log(item.name, "has order, resolve inbound")
-          if (periods[currentPeriod + findProductByIdx(item.idx)!.lead_time].items.find((to_inbound) => to_inbound.idx == item.idx)!.inbound >= item.order) {
+          if (item.isInboundGenerated) {
             console.log(item.name, "inbound already satisfied")
           } else {
             console.log(item.name, "inbound not satisfied, adding inbound")
             periods[currentPeriod + findProductByIdx(item.idx)!.lead_time].items.find((to_inbound) => to_inbound.idx == item.idx)!.inbound = item.order
+            item.isInboundGenerated = true;
           }
 
         }
