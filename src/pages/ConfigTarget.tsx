@@ -7,6 +7,7 @@ import { TargetProductItem } from "../components/configPage/TargetProductItem"
 
 export const ConfigTarget = () => {
     const { targetProducts, setTargetProducts } = React.useContext(AppContext)
+
     const handleAddTargetProduct = () => {
         setTargetProducts([...targetProducts, {
             idx: targetProducts.length,

@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { Link, useNavigate } from 'react-router-dom';
 
 export const NavBar = () => {
-    const pages = [{ name: '参数设定', href: '/config/target' }, { name: '计算结果', href: '/result' }];
+    const pages = [{ name: '参数设定', href: '/config/target' }, { name: '计算结果', href: '/result' }, { name: '清除设定', href: '/clear' }];
     const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
     const navigate = useNavigate();
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
