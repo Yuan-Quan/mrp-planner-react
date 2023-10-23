@@ -11,7 +11,7 @@ export const ConfigDependencis = () => {
         setNormalProducts([...normalProducts, {
             idx: targetProducts.length + normalProducts.length,
             name: "",
-            lead_time: 0,
+            lead_time: 1,
             dependencies: [],
             inital_stock: 0,
         }])

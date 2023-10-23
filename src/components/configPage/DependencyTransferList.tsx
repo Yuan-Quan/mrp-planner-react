@@ -236,7 +236,7 @@ export default function DepsTransferList(props: IProduct) {
 
     return (
         <Grid container spacing={2} justifyContent="center" alignItems="center">
-            <Typography variant="h1">{props.name}的依赖项目</Typography>
+            <Typography variant="h4">{props.name}的依赖项目</Typography>
             <Grid item>{customList(left)}</Grid>
             <Grid item>
                 <Grid container direction="column" alignItems="center">

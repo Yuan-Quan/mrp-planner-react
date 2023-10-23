@@ -10,7 +10,7 @@ export const Main = () => {
                     <Link to="/config/target">开始新的计算</Link>
                 </ListItem>
                 <ListItem>
-                    <Link to="/game">计算结果</Link>
+                    <Link to="/result">计算结果</Link>
                 </ListItem>
             </List>
         </Box>

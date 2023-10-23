@@ -11,7 +11,7 @@ export const ConfigTarget = () => {
         setTargetProducts([...targetProducts, {
             idx: targetProducts.length,
             name: "",
-            lead_time: 0,
+            lead_time: 1,
             dependencies: [],
             inital_stock: 0,
         }])

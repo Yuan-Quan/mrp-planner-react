@@ -9,7 +9,7 @@ import { ConfigPage } from './pages/Config';
 import { ConfigTarget } from './pages/ConfigTarget';
 import { ConfigDependencis } from './pages/ConfigDependencis';
 import { ConfigInitState } from './pages/ConfigInitState';
-import { IProduct } from './MrpData';
+import { IPeriod, IProduct } from './MrpData';
 import { ConfigConfrim } from './pages/ConfigInitConfirm';
 import { Result } from './pages/Result';
 
@@ -20,6 +20,8 @@ interface IAppContext {
   setNormalProducts: React.Dispatch<React.SetStateAction<IProduct[]>>
   selectedProductIdx: number
   setSelectedProductIdx: React.Dispatch<React.SetStateAction<number>>
+  mrpResult: IPeriod[]
+  setMrpResult: React.Dispatch<React.SetStateAction<IPeriod[]>>
 }
 
 export const AppContext = React.createContext<IAppContext>(null!);
@@ -33,13 +35,14 @@ function App() {
     // recall from localStorage
     JSON.parse(localStorage.getItem("normalProducts") || "[]")
   )
+  const [mrpResult, setMrpResult] = React.useState<IPeriod[]>([])
   const [selectedProductIdx, setSelectedProductIdx] = React.useState<number>(-1)
 
   return (
     <div className="App">
       <CssBaseline />
       <AppContext.Provider value={{
-        targetProducts, setTargetProducts, normalProducts, setNormalProducts, selectedProductIdx, setSelectedProductIdx
+        targetProducts, setTargetProducts, normalProducts, setNormalProducts, selectedProductIdx, setSelectedProductIdx, mrpResult, setMrpResult
       }}>
         <BRouter>
           <Routes>

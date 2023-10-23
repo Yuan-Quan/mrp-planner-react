@@ -2,32 +2,7 @@ import * as React from "react";
 import { IDependency, IPeriod, IPeriodItem, IProduct, IStockItem } from "../MrpData";
 import { AppContext } from "../App";
 
-export const CalculateMrpChainOfProduct = (props: any) => {
-  const {
-    targetProducts,
-    setTargetProducts,
-    normalProducts,
-    setNormalProducts,
-  } = React.useContext(AppContext);
-
-  let periods: IPeriod[] = []; // the periods of the MRP chain from end to start
-  let stock: IStockItem[] = []; // the stock of the MRP chain from end to start
-
-  // populate the stock
-  targetProducts.map((product) => {
-    stock.push({
-      idx: product.idx,
-      name: product.name,
-      amount: product.inital_stock,
-    });
-  });
-  normalProducts.map((product) => {
-    stock.push({
-      idx: product.idx,
-      name: product.name,
-      amount: product.inital_stock,
-    });
-  });
+export const calculateMrpChainOfProduct = (targetProducts: IProduct[], normalProducts: IProduct[], product_idx: number) => {
 
   // we will offset the current period to the target period, after we have calculated the whole chain
   //create a empty period item
@@ -48,7 +23,7 @@ export const CalculateMrpChainOfProduct = (props: any) => {
   const createPeriod = (idx: number) => {
     return {
       items: [
-        createPeriodItem(targetProducts[props.product_idx]),
+        createPeriodItem(targetProducts[product_idx]),
         ...normalProducts.map(createPeriodItem),
       ],
     };
@@ -141,12 +116,33 @@ export const CalculateMrpChainOfProduct = (props: any) => {
     }
     return unsatisfiedCount
   }
+
+  let periods: IPeriod[] = []; // the periods of the MRP chain from end to start
+  let stock: IStockItem[] = []; // the stock of the MRP chain from end to start
+
+  // populate the stock
+  targetProducts.map((product) => {
+    stock.push({
+      idx: product.idx,
+      name: product.name,
+      amount: product.inital_stock,
+    });
+  });
+  normalProducts.map((product) => {
+    stock.push({
+      idx: product.idx,
+      name: product.name,
+      amount: product.inital_stock,
+    });
+  });
+
+
   // populatete the periods, 10 should be plenty
   for (let i = 0; i < 10; i++)
     periods.push(createPeriod(0));
   // set the gross requirement of the target product in the last period
   periods[0].items[0].gross_requirement =
-    targetProducts[props.product_idx].target_stock || 0; // 0 to suppress the ts error
+    targetProducts[product_idx].target_stock || 0; // 0 to suppress the ts error
 
   // calculate the MRP chain
   var unsatisfiedCount = 1
@@ -158,6 +154,6 @@ export const CalculateMrpChainOfProduct = (props: any) => {
     console.log("=====================================")
     console.log("unsatisfiedCount", unsatisfiedCount)
   }
-
-  return <div></div>;
+  return periods;
 };
+
