@@ -97,6 +97,10 @@ export const calculateMrpChainOfProduct = (targetProducts: IProduct[], normalPro
           if (item.isInboundGenerated) {
             console.log(item.name, "inbound already satisfied")
           } else {
+            if (findProductByIdx(item.idx)!.minimal_order_quantity > item.order) {
+              console.log("minimal order quantity not reached, padding to minimal order quantity")
+              item.order = findProductByIdx(item.idx)!.minimal_order_quantity
+            }
             console.log(item.name, "inbound not satisfied, adding inbound")
             periods[currentPeriod + findProductByIdx(item.idx)!.lead_time].items.find((to_inbound) => to_inbound.idx == item.idx)!.inbound = item.order
             item.isInboundGenerated = true;
@@ -151,13 +155,14 @@ export const calculateMrpChainOfProduct = (targetProducts: IProduct[], normalPro
   // for some unknown reason, the following code will cause this thing to stuck in a infinite loop
   // for (let i = 0; i < max_period_count + 1; i++) {
   // so used a static number instead, 100 should be plenty
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 100; i++) {
     periods.push(createPeriod(i));
   }
 
   // set the gross requirement of the target product in the expected period
+  // +10 is a workaround for running out of array index
   targetProducts.map((target, idx) => {
-    periods[target.target_periode!].items[idx].gross_requirement = targetProducts[idx].target_stock || 0; // 0 to suppress the ts error
+    periods[target.target_periode! + 10].items[idx].gross_requirement = targetProducts[idx].target_stock || 0; // 0 to suppress the ts error
   })
   // calculate the MRP chain
   var unsatisfiedCount = 1
@@ -169,7 +174,7 @@ export const calculateMrpChainOfProduct = (targetProducts: IProduct[], normalPro
     console.log("=====================================")
     console.log("unsatisfiedCount", unsatisfiedCount)
   }
-  return periods.slice(1, max_target_period + 1);
+  return periods.slice(10, max_target_period + 11);
 };
 
 // cut off the periods that are not needed

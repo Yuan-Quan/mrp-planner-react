@@ -47,10 +47,10 @@ const InfoTable = () => {
                     <TableRow>
                         <TableCell>产品名称</TableCell>
                         <TableCell align="right">初始库存</TableCell>
-                        <TableCell align="right">提前期&nbsp;(periods)</TableCell>
-                        <TableCell align="right">依赖项目&nbsp;</TableCell>
-                        <TableCell align="right">目标周期&nbsp;(periods)</TableCell>
-                        <TableCell align="right">目标库存&nbsp;</TableCell>
+                        <TableCell align="right">提前期</TableCell>
+                        <TableCell align="right">依赖项目</TableCell>
+                        <TableCell align="right">目标周期</TableCell>
+                        <TableCell align="right">目标库存</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

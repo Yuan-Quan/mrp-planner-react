@@ -26,7 +26,7 @@ export default function ProductMrpTable(props: IProduct) {
         mrpResult.map((period, index) => {
             period.items.map((item) => {
                 if (item.idx == props.idx) {
-                    rows.push({ name: item.name, period: index + 1, gr: item.gross_requirement, stock: item.stock, inbound: item.inbound, order: item.order })
+                    rows.push({ name: item.name, period: index, gr: item.gross_requirement, stock: item.stock, inbound: item.inbound, order: item.order })
                 }
             })
         })
