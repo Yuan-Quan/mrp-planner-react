@@ -40,6 +40,28 @@ export const DepsProductItem = (props: IProduct) => {
         setNormalProducts(newNormalProducts);
     }
 
+    const handleMinimumOrderQuantityChange = (e: any) => {
+        const newTargetProducts = targetProducts.map((product) => {
+            if (product.idx == props.idx) {
+                return { ...product, minimal_order_quantity: parseInt(e.target.value) }
+            }
+            else {
+                return product
+            }
+        });
+        setTargetProducts(newTargetProducts);
+
+        const newNormalProducts = normalProducts.map((product) => {
+            if (product.idx == props.idx) {
+                return { ...product, minimal_order_quantity: parseInt(e.target.value) }
+            }
+            else {
+                return product
+            }
+        });
+        setNormalProducts(newNormalProducts);
+    }
+
     // persist to localStorage
     React.useEffect(() => {
         localStorage.setItem("normalProducts", JSON.stringify(normalProducts))
@@ -59,7 +81,15 @@ export const DepsProductItem = (props: IProduct) => {
                         shrink: true,
                     }}
                 />
-
+                <TextField
+                    label="订单批量*"
+                    type="number"
+                    defaultValue={props.minimal_order_quantity}
+                    onChange={handleMinimumOrderQuantityChange}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
             </ListItemButton>
         </ListItem>
     )

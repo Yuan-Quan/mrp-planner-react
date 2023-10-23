@@ -7,6 +7,7 @@ export interface IProduct {
   target_periode?: number;
   target_stock?: number;
   level?: number;
+  minimal_order_quantity: number;
 }
 
 export interface IDependency {

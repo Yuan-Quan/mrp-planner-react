@@ -14,6 +14,7 @@ export const ConfigDependencis = () => {
             lead_time: 1,
             dependencies: [],
             inital_stock: 0,
+            minimal_order_quantity: 1,
         }])
     }
     console.log(targetProducts);
