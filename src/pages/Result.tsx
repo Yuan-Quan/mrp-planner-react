@@ -9,7 +9,7 @@ export const Result = () => {
     const { targetProducts, normalProducts, setMrpResult } = React.useContext(AppContext)
 
     React.useEffect(() => {
-        setMrpResult(calculateMrpChainOfProduct(targetProducts, normalProducts, 0))
+        setMrpResult(calculateMrpChainOfProduct(targetProducts, normalProducts))
     }, [])
 
     return (
