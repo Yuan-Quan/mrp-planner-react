@@ -42,7 +42,7 @@ export const calculateMrpChainOfProduct = (targetProducts: IProduct[], normalPro
   const propagetOrderOnce = () => {
     for (let currentPeriod = periods.length - 1; currentPeriod > 0; currentPeriod--) {
       periods[currentPeriod].items.forEach((item) => {
-        if (currentPeriod - findProductByIdx(item.idx)!.lead_time >= periods.length) {
+        if (currentPeriod - findProductByIdx(item.idx)!.lead_time < 0) {
           console.log(item.name, "order query out of range, skip")
           return; // use return instead of continue
         }
@@ -152,7 +152,7 @@ export const calculateMrpChainOfProduct = (targetProducts: IProduct[], normalPro
 
   // set the gross requirement of the target product in the expected period
   targetProducts.map((target, idx) => {
-    periods[target.target_periode! - 1].items[idx].gross_requirement = targetProducts[idx].target_stock || 0; // 0 to suppress the ts error
+    periods[target.target_periode!].items[idx].gross_requirement = targetProducts[idx].target_stock || 0; // 0 to suppress the ts error
   })
   // calculate the MRP chain
   var unsatisfiedCount = 1
@@ -164,7 +164,7 @@ export const calculateMrpChainOfProduct = (targetProducts: IProduct[], normalPro
     console.log("=====================================")
     console.log("unsatisfiedCount", unsatisfiedCount)
   }
-  return periods.slice(0, max_target_period);
+  return periods.slice(1, max_target_period + 1);
 };
 
 // cut off the periods that are not needed
